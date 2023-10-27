@@ -8,9 +8,9 @@
         {% render 'icon-filter' %}
         {{ section.settings.title }}
       </button>
-      <span class="pfilter-count">20 products</span>
+      <span class="pfilter-count">{{ collection.products_count }} products</span>
     </div>
-    <form action="">
+    <form>
       <div class="pfilter-drawer" aria-expanded="false">
         <div class="pfilter-drawer-backdrop"></div>
 
@@ -23,143 +23,147 @@
           </header>
 
 
+          {% comment %} Active filters {% endcomment %}
           <div class="pfilter-drawer-body">
-            <div class="pfilter-applied">
-              <div class="pfilter-applied-header">
-                <p class="pfilter-applied-title">Applied filters</p>
-                <button type="button" class="pfilter-applied-clear">Reset All</button>
-              </div>
+            {% if collection.filters.size > 0 %}
 
-              <div class="pfilter-applied-list">
-                <button type="button" class="pfilter-applied-pill">
-                  Availibility: In Stock
-                  <span class="pfilter-applied-pill-remove">
-                    {% render 'icon-close-small' %}
-                  </span>
-                </button>
-                <button type="button" class="pfilter-applied-pill">
-                  Availibility: Out Of Stock
-                  <span class="pfilter-applied-pill-remove">
-                    {% render 'icon-close-small' %}
-                  </span>
-                </button>
-                <button type="button" class="pfilter-applied-pill">
-                  Color: Red
-                  <span class="pfilter-applied-pill-remove">
-                    {% render 'icon-close-small' %}
-                  </span>
-                </button>
-              </div>
-            </div>
+              <div class="pfilter-applied">
+                <div class="pfilter-applied-header">
+                  <p class="pfilter-applied-title">Applied filters</p>
+                  <a href="{{ collection.url }}?sort_by={{ collection.sort_by }}" class="pfilter-applied-clear">Reset All</a>
+                </div>
 
-            {% comment %} Color filter {% endcomment %}
-            <div class="pfilter-filter-group">
-              <div class="pfilter-filter-header">
-                <p class="pfilter-filter-title">Color
-                  <small>(2)</small>
-                </p>
-                <button type="button" class="pfilter-filter-clear">Reset</button>
+                <div class="pfilter-applied-list">
+                  {% for filter in collection.filters %}
+                    {% case filter.type %}
+                      {% when 'price_range' %}
+                        {%- if filter.min_value.value != null or filter.max_value.value != null -%}
+                          <a href="{{ filter.url_to_remove }}" class="pfilter-applied-pill">
+                            {%- assign min_value = filter.min_value.value | default: 0 -%}
+                            {%- assign max_value = filter.max_value.value | default: filter.range_max -%}
+                            {{ min_value | money }} - {{ max_value | money }}
+                            <span class="pfilter-applied-pill-remove">
+                              {% render 'icon-close-small' %}
+                            </span>
+                          </a>
+                        {%- endif -%}
+                      {% else %}
+                        {%- for filter_value in filter.active_values -%}
+                          <a href="{{ filter.url_to_remove }}" class="pfilter-applied-pill">
+                            {{ filter.label }}: {{ filter_value.label }}
+                            <span class="pfilter-applied-pill-remove">
+                              {% render 'icon-close-small' %}
+                            </span>
+                          </a>
+                        {%- endfor -%}
+                    {% endcase %}
+                  {% endfor %}
+                </div>
               </div>
-              {% assign colors = "Red,Blue,Green,Yellow" | split: "," %}
-              <div class="pfilter-filter-list">
-                {% for color in colors %}
-                  <input
-                    type="checkbox"
-                    name="color"
-                    id="filter-{{ filter.param_name | escape }}-{{ forloop.index }}"
-                    class="pfilter-filter-checkbox">
-                  <label for="filter-{{ filter.param_name | escape }}-{{ forloop.index }}" class="pfilter-filter-checkbox-label">
-                    {{ color }}
-                    <small>({{ forloop.index }})</small>
-                  </label>
-                {% endfor %}
-              </div>
-            </div>
+            {% endif %}
 
-            {% comment %} Availibility filter {% endcomment %}
-            <div class="pfilter-filter-group">
-              <div class="pfilter-filter-header">
-                <p class="pfilter-filter-title">Availibility
-                  <small>(2)</small>
-                </p>
-                <button type="button" class="pfilter-filter-clear">Reset</button>
-              </div>
-              <div class="pfilter-filter-list">
-                <input
-                  type="checkbox"
-                  name="availibility"
-                  class="pfilter-filter-checkbox">
-                <label class="pfilter-filter-checkbox-label">
-                  In stock
-                  <small>({{ 19 }})</small>
-                </label>
+            {% comment %} Filters {% endcomment %}
+            {%- for filter in collection.filters -%}
+              <div class="pfilter-filter-group">
+                <div class="pfilter-filter-header">
+                  <p class="pfilter-filter-title">{{ filter.label }}
+                    {% if filter.type == 'boolean' or filter.type == 'list' %}
+                      <small>({{ filter.active_values.size }})</small>
+                    {% endif %}
+                  </p>
+                  <a href="{{ filter.url_to_remove }}" class="pfilter-filter-clear">Reset</a>
+                </div>
 
-                <input
-                  type="checkbox"
-                  name="availibility"
-                  class="pfilter-filter-checkbox">
-                <label class="pfilter-filter-checkbox-label">
-                  Ouf of stock
-                  <small>({{ 1 }})</small>
-                </label>
-              </div>
-            </div>
+                {% case filter.type %}
+                  {% when 'boolean' %}
+                    <div class="pfilter-filter-boolean">
+                      <input
+                        type="checkbox"
+                        name="availibility"
+                        class="pfilter-filter-checkbox">
+                      <label class="pfilter-filter-checkbox-label">
+                        {{- filter_value.label -}}
+                        <small>({{ filter_value.count }})</small>
+                      </label>
+                    </div>
+                  {% when 'price_range' %}
+                    <div class="pfilter-filter-range">
+                      <input
+                        name="{{ filter.min_value.param_name }}"
+                        id="Filter-{{ filter.min_value.param_name }}"
+                        {% if filter.min_value.value -%}
+                        value="{{ filter.min_value.value | money_without_currency | replace: ',', '.' }}"
+                        {%- endif %}
+                        type="number"
+                        min="0"
+                        max="{{ filter.range_max | money_without_currency | replace: ',', '.' }}"
+                        placeholder="From"
+                        class="pfilter-filter-number">
 
-            {% comment %} Price filter {% endcomment %}
-            <div class="pfilter-filter-group">
-              <div class="pfilter-filter-header">
-                <p class="pfilter-filter-title">
-                  Price
-                </p>
-                <button type="button" class="pfilter-filter-clear">Reset</button>
-              </div>
-              <div class="pfilter-filter-range">
-                <input
-                  type="text"
-                  name="min-price"
-                  placeholder="From"
-                  class="pfilter-filter-number">
+                      <span>
+                        -
+                      </span>
 
-                <span>
-                  -
-                </span>
-
-                <input
-                  type="text"
-                  name="max-price"
-                  placeholder="To"
-                  class="pfilter-filter-number">
+                      <input
+                        name="{{ filter.max_value.param_name }}"
+                        id="Filter-{{ filter.max_value.param_name }}"
+                        {% if filter.max_value.value -%}
+                        value="{{ filter.max_value.value | money_without_currency | replace: ',', '.' }}"
+                        {%- endif %}
+                        type="number"
+                        min="0"
+                        max="{{ filter.range_max | money_without_currency | replace: ',', '.' }}"
+                        placeholder="To"
+                        class="pfilter-filter-number">
+                    </div>
+                  {% when 'list' %}
+                    <div class="pfilter-filter-list">
+                      {% for filter_value in filter.values %}
+                        <input
+                          type="checkbox"
+                          id="filter-{{ filter.param_name | escape }}-{{ forloop.index }}"
+                          name="{{ filter_value.param_name }}"
+                          value="{{ filter_value.value }}"
+                          class="pfilter-filter-checkbox"
+                          {% if filter_value.active -%}
+                          checked
+                          {%- endif %}
+                          {% if filter_value.count == 0 and filter_value.active == false -%}
+                          disabled
+                          {%- endif %}>
+                        <label for="filter-{{ filter.param_name | escape }}-{{ forloop.index }}" class="pfilter-filter-checkbox-label">
+                          {{- filter_value.label -}}
+                          <small>({{ filter_value.count }})</small>
+                        </label>
+                      {% endfor %}
+                    </div>
+                {% endcase %}
               </div>
-            </div>
-
-            {% comment %} Boolean filter {% endcomment %}
-            <div class="pfilter-filter-group">
-              <div class="pfilter-filter-boolean">
-                <input
-                  type="checkbox"
-                  name="availibility"
-                  class="pfilter-filter-checkbox">
-                <label class="pfilter-filter-checkbox-label">
-                  In Stock
-                  <small>({{ 19 }})</small>
-                </label>
-              </div>
-            </div>
+            {% endfor %}
 
             <hr>
 
             {% comment %} Sort {% endcomment %}
             <div class="pfilter-sort">
               <label>Sort by</label>
-              <select name="order by" class="pfilter-sort-select">
-                <option value="featured">Featured</option>
-                <option value="Best Selling">Best Selling</option>
+              {%- assign sort_by = collection.sort_by | default: collection.default_sort_by -%}
+
+              <select name="sort_by" class="pfilter-sort-select">
+                {%- for option in collection.sort_options -%}
+                  <option
+                    value="{{ option.value | escape }}"
+                    {% if option.value == sort_by %}
+                    selected="selected"
+                    {% endif %}>
+                    {{ option.name | escape }}
+                  </option>
+                {%- endfor -%}
               </select>
             </div>
           </div>
 
           <div class="pfilter-drawer-footer">
-            <button type="button" class="pfilter-submit button">Apply</button>
+            <button type="submit" class="pfilter-submit button">Apply</button>
           </div>
         </div>
       </div>
