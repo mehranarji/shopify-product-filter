@@ -1,0 +1,314 @@
+/* Main container */
+.pfilter-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+}
+
+.pfilter-button {
+    font-size: 1.7rem;
+    border: none;
+    background: none;
+    color: rgba(var(--color-link), var(--alpha-link));
+    cursor: pointer;
+    padding: .5rem 1rem;
+}
+
+.pfilter-button:hover {
+    background-color: rgba(var(--color-foreground), .03);
+}
+
+.pfilter-button svg {
+    width: 2rem;
+    margin-right: 1rem;
+    color: rgba(var(--color-link), .5);
+    vertical-align: middle;
+}
+
+.pfilter-count {
+    font-size: 1.4rem;
+}
+
+/* Drawer */
+.pfilter-drawer {
+    display: none;
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 100;
+}
+
+.pfilter-drawer::before {
+    content: "";
+    display: block;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(var(--color-foreground), .5);
+    z-index: 100;
+}
+
+.pfilter-drawer[open] {
+    display: block;
+}
+
+.pfilter-drawer-container {
+    display: flex;
+    flex-flow: column nowrap;
+    position: relative;
+    width: 350px;
+    max-width: 100%;
+    height: 100%;
+    background: white;
+    z-index: 110;
+}
+
+.pfilter-drawer-header {
+    border-bottom: solid 1px rgba(var(--color-foreground), .08);
+    padding: 3rem 1.5rem 2rem;
+}
+
+.pfilter-drawer-body {
+    flex: 1;
+    padding: 3rem 1.5rem;
+    overflow: auto;
+}
+
+.pfilter-drawer-footer {
+    border-bottom: solid 1px rgba(var(--color-foreground), .08);
+    padding: 3rem 1.5rem;
+}
+
+.pfilter-drawer-title {
+    margin: 0;
+}
+
+.pfilter-drawer-container hr {
+    margin: 2rem 0;
+}
+
+.pfilter-filter-header,
+.pfilter-applied-header,
+.pfilter-drawer-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.pfilter-drawer-close {
+    border: none;
+    background: none;
+    padding: 1rem;
+    cursor: pointer;
+    color: rgba(var(--color-foreground), .5);
+    transition: background .3s ease, color .3s ease;
+}
+
+.pfilter-drawer-close:hover,
+.pfilter-drawer-close:focus,
+.pfilter-drawer-close:active {
+    color: rgba(var(--color-foreground), .8);
+    background-color: rgba(var(--color-foreground), .03);
+    outline: none;
+    box-shadow: none;
+}
+
+.pfilter-drawer-close svg {
+    width: 2rem;
+    height: 2rem;
+    vertical-align: middle;
+}
+
+/* Filters */
+.pfilter-applied-title,
+.pfilter-filter-title {
+    font-size: 1.8rem;
+    margin-top: 0;
+    margin-bottom: .5rem;
+    color: rgb(var(--color-foreground));
+}
+
+.pfilter-applied-clear,
+.pfilter-filter-clear {
+    /* TODO make it a snippet */
+    border: none;
+    background: none;
+    cursor: pointer;
+
+    font-size: 1.2rem;
+    color: rgba(var(--color-foreground), .5);
+    transition: color .3s ease;
+}
+
+.pfilter-applied-clear:hover,
+.pfilter-filter-clear:hover {
+    color: rgba(var(--color-foreground), .8);
+}
+
+.pfilter-filter-group {
+    margin-bottom: 2rem;
+}
+
+.pfilter-filter-checkbox {
+    display: block;
+    position: absolute;
+    width: 0%;
+    height: 0%;
+    opacity: 0;
+    margin-bottom: .3rem;
+    cursor: pointer;
+}
+
+.pfilter-filter-checkbox-label {
+    display: block;
+    position: relative;
+    padding-left: 2rem;
+    cursor: pointer;
+}
+
+.pfilter-filter-checkbox-label::before {
+    position: absolute;
+    top: .4em;
+    left: 0;
+    content: "";
+    display: inline-block;
+    width: 1.5rem;
+    height: 1.5rem;
+    border: solid 1px rgba(var(--color-foreground), .2);
+    transition: background .3s ease, border .3s ease;
+}
+
+.pfilter-filter-checkbox-label::after {
+    position: absolute;
+    top: .5em;
+    left: .3em;
+    content: "";
+    display: inline-block;
+    width: .5rem;
+    height: 1rem;
+    transform: rotate(45deg);
+    border: solid 0 white;
+    border-bottom-width: 2px;
+    border-right-width: 2px;
+    opacity: 0;
+    transition: opacity .3s ease;
+}
+
+.pfilter-filter-checkbox:focus + .pfilter-filter-checkbox-label::before,
+.pfilter-filter-checkbox-label:hover::before {
+    border: solid 1px rgba(var(--color-foreground), .5);
+}
+
+.pfilter-filter-checkbox:checked + .pfilter-filter-checkbox-label::before {
+    background-color: rgb(var(--color-foreground));
+    border: solid 1px rgb(var(--color-foreground));
+}
+
+.pfilter-filter-checkbox:checked:focus + .pfilter-filter-checkbox-label::before {
+    background-color: rgba(var(--color-foreground), .6);
+    border: solid 1px rgba(var(--color-foreground), .1);
+}
+
+.pfilter-filter-checkbox:checked + .pfilter-filter-checkbox-label::after {
+    opacity: 1;
+}
+
+.pfilter-filter-range {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+}
+
+.pfilter-filter-text,
+.pfilter-filter-number {
+    display: block;
+    width: 100%;
+    min-width: unset;
+    border: solid 1px rgba(var(--color-foreground), .08);
+    padding: 1rem 1.5rem;
+    transition: border .3s ease;
+}
+
+.pfilter-filter-text:hover,
+.pfilter-filter-number:hover,
+.pfilter-filter-text:focus,
+.pfilter-filter-number:focus {
+    border: solid 1px rgba(var(--color-foreground), .5);
+    outline: none;
+    box-shadow: none;
+}
+
+/* Applied filters */
+.pfilter-applied {
+    margin-bottom: 2rem;
+}
+
+.pfilter-applied-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .5rem;
+}
+
+.pfilter-applied-pill {
+    font-size: 1.5rem;
+    color: rgba(var(--color-foreground), .7);
+    background: none;
+    border: solid 1px rgba(var(--color-foreground), .08);
+    padding: .5rem 1rem;
+    cursor: pointer;
+    transition: border .3s ease;
+}
+
+.pfilter-applied-pill-remove {
+    background: none;
+    border: none;
+    color: rgba(var(--color-link), .3);
+    margin-left: .5rem;
+    transition: color .3s ease;
+}
+
+.pfilter-applied-pill-remove svg {
+    width: 1.5rem;
+    height: 1.5rem;
+    vertical-align: middle;
+}
+
+.pfilter-applied-pill:hover,
+.pfilter-applied-pill:focus {
+    border: solid 1px rgba(var(--color-foreground), .5);
+    outline: none;
+    box-shadow: none;
+}
+
+.pfilter-applied-pill:hover .pfilter-applied-pill-remove,
+.pfilter-applied-pill:focus .pfilter-applied-pill-remove {
+    color: rgba(var(--color-link), .8);
+}
+
+/* Sort */
+.pfilter-sort-select {
+    display: block;
+    width: 100%;
+    background-color: transparent;
+    border: solid 1px rgba(var(--color-foreground), .08);
+    padding: 1rem 1.5rem;
+    cursor: pointer;
+    transition: border .3s ease;
+}
+
+.pfilter-sort-select:hover,
+.pfilter-sort-select:focus,
+.pfilter-sort-select:active {
+    border: solid 1px rgba(var(--color-foreground), .5);
+    outline: none;
+    box-shadow: none;
+}
+
+/* Submit */
+.pfilter-submit {
+}

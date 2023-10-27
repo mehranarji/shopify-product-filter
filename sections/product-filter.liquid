@@ -1,0 +1,183 @@
+{{ 'product-filter.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'product-filter.js' | asset_url }}" defer="defer"></script>
+
+<product-filter>
+  <div class="page-width">
+    <div class="pfilter-container">
+      <button type="button" class="pfilter-button">
+        {% render 'icon-filter' %}
+        {{ section.settings.title }}
+      </button>
+      <span class="pfilter-count">20 products</span>
+    </div>
+    <form action="">
+      <div class="pfilter-drawer" aria-expanded="false">
+        <div class="pfilter-drawer-backdrop"></div>
+
+        <div class="pfilter-drawer-container">
+          <header class="pfilter-drawer-header">
+            <h2 class="pfilter-drawer-title">{{ section.settings.title }}</h2>
+            <button type="button" class="pfilter-drawer-close">
+              {% render 'icon-close-small' %}
+            </button>
+          </header>
+
+
+          <div class="pfilter-drawer-body">
+            <div class="pfilter-applied">
+              <div class="pfilter-applied-header">
+                <p class="pfilter-applied-title">Applied filters</p>
+                <button type="button" class="pfilter-applied-clear">Reset All</button>
+              </div>
+
+              <div class="pfilter-applied-list">
+                <button type="button" class="pfilter-applied-pill">
+                  Availibility: In Stock
+                  <span class="pfilter-applied-pill-remove">
+                    {% render 'icon-close-small' %}
+                  </span>
+                </button>
+                <button type="button" class="pfilter-applied-pill">
+                  Availibility: Out Of Stock
+                  <span class="pfilter-applied-pill-remove">
+                    {% render 'icon-close-small' %}
+                  </span>
+                </button>
+                <button type="button" class="pfilter-applied-pill">
+                  Color: Red
+                  <span class="pfilter-applied-pill-remove">
+                    {% render 'icon-close-small' %}
+                  </span>
+                </button>
+              </div>
+            </div>
+
+            {% comment %} Color filter {% endcomment %}
+            <div class="pfilter-filter-group">
+              <div class="pfilter-filter-header">
+                <p class="pfilter-filter-title">Color
+                  <small>(2)</small>
+                </p>
+                <button type="button" class="pfilter-filter-clear">Reset</button>
+              </div>
+              {% assign colors = "Red,Blue,Green,Yellow" | split: "," %}
+              <div class="pfilter-filter-list">
+                {% for color in colors %}
+                  <input
+                    type="checkbox"
+                    name="color"
+                    id="filter-{{ filter.param_name | escape }}-{{ forloop.index }}"
+                    class="pfilter-filter-checkbox">
+                  <label for="filter-{{ filter.param_name | escape }}-{{ forloop.index }}" class="pfilter-filter-checkbox-label">
+                    {{ color }}
+                    <small>({{ forloop.index }})</small>
+                  </label>
+                {% endfor %}
+              </div>
+            </div>
+
+            {% comment %} Availibility filter {% endcomment %}
+            <div class="pfilter-filter-group">
+              <div class="pfilter-filter-header">
+                <p class="pfilter-filter-title">Availibility
+                  <small>(2)</small>
+                </p>
+                <button type="button" class="pfilter-filter-clear">Reset</button>
+              </div>
+              <div class="pfilter-filter-list">
+                <input
+                  type="checkbox"
+                  name="availibility"
+                  class="pfilter-filter-checkbox">
+                <label class="pfilter-filter-checkbox-label">
+                  In stock
+                  <small>({{ 19 }})</small>
+                </label>
+
+                <input
+                  type="checkbox"
+                  name="availibility"
+                  class="pfilter-filter-checkbox">
+                <label class="pfilter-filter-checkbox-label">
+                  Ouf of stock
+                  <small>({{ 1 }})</small>
+                </label>
+              </div>
+            </div>
+
+            {% comment %} Price filter {% endcomment %}
+            <div class="pfilter-filter-group">
+              <div class="pfilter-filter-header">
+                <p class="pfilter-filter-title">
+                  Price
+                </p>
+                <button type="button" class="pfilter-filter-clear">Reset</button>
+              </div>
+              <div class="pfilter-filter-range">
+                <input
+                  type="text"
+                  name="min-price"
+                  placeholder="From"
+                  class="pfilter-filter-number">
+
+                <span>
+                  -
+                </span>
+
+                <input
+                  type="text"
+                  name="max-price"
+                  placeholder="To"
+                  class="pfilter-filter-number">
+              </div>
+            </div>
+
+            {% comment %} Boolean filter {% endcomment %}
+            <div class="pfilter-filter-group">
+              <div class="pfilter-filter-boolean">
+                <input
+                  type="checkbox"
+                  name="availibility"
+                  class="pfilter-filter-checkbox">
+                <label class="pfilter-filter-checkbox-label">
+                  In Stock
+                  <small>({{ 19 }})</small>
+                </label>
+              </div>
+            </div>
+
+            <hr>
+
+            {% comment %} Sort {% endcomment %}
+            <div class="pfilter-sort">
+              <label>Sort by</label>
+              <select name="order by" class="pfilter-sort-select">
+                <option value="featured">Featured</option>
+                <option value="Best Selling">Best Selling</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="pfilter-drawer-footer">
+            <button type="button" class="pfilter-submit button">Apply</button>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+</product-filter>
+
+{% schema %}
+  {
+    "name": "Product filter",
+    "class": "section",
+    "settings": [
+      {
+        "id": "title",
+        "type": "text",
+        "default": "Filter and sort",
+        "label": "Title"
+      }
+    ]
+  }
+{% endschema %}
