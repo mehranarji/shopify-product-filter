@@ -237,7 +237,13 @@
       "title": "Search results",
       "search_for": "Search for “{{ terms }}”",
       "suggestions": "Suggestions",
-      "pages": "Pages"
+      "pages": "Pages",
+      "applied_filters": "Applied filters",
+      "clear_all": "Clear All",
+      "clear": "Clear",
+      "filter_and_sort": "Filter and sort",
+      "sort_by": "Sort By",
+      "apply": "Apply"
     },
     "cart": {
       "cart": "Cart"

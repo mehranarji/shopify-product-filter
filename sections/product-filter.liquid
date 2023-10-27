@@ -1,5 +1,4 @@
-{{ 'product-filter.css' | asset_url | stylesheet_tag }}
-<script src="{{ 'product-filter.js' | asset_url }}" defer="defer"></script>
+{{ 'product-filter.scss' | asset_url | stylesheet_tag }}
 
 <product-filter>
   <div class="page-width">
@@ -8,10 +7,10 @@
         {% render 'icon-filter' %}
         {{ section.settings.title }}
       </button>
-      <span class="pfilter-count">{{ collection.products_count }} products</span>
+      <span class="pfilter-count">{{ 'templates.search.results_products_with_count' | t: count: collection.products_count }}</span>
     </div>
     <form>
-      <div class="pfilter-drawer" aria-expanded="false">
+      <div class="pfilter-drawer">
         <div class="pfilter-drawer-backdrop"></div>
 
         <div class="pfilter-drawer-container">
@@ -29,8 +28,8 @@
 
               <div class="pfilter-applied">
                 <div class="pfilter-applied-header">
-                  <p class="pfilter-applied-title">Applied filters</p>
-                  <a href="{{ collection.url }}?sort_by={{ collection.sort_by }}" class="pfilter-applied-clear">Reset All</a>
+                  <p class="pfilter-applied-title">{{ 'templates.search.applied_filters' | t }}</p>
+                  <a href="{{ collection.url }}?sort_by={{ collection.sort_by }}" class="pfilter-applied-clear">{{ "templates.search.clear_all" | t }}</a>
                 </div>
 
                 <div class="pfilter-applied-list">
@@ -67,11 +66,11 @@
               <div class="pfilter-filter-group">
                 <div class="pfilter-filter-header">
                   <p class="pfilter-filter-title">{{ filter.label }}
-                    {% if filter.type == 'boolean' or filter.type == 'list' %}
+                    {% if filter.active_values.size > 0 %}
                       <small>({{ filter.active_values.size }})</small>
                     {% endif %}
                   </p>
-                  <a href="{{ filter.url_to_remove }}" class="pfilter-filter-clear">Reset</a>
+                  <a href="{{ filter.url_to_remove }}" class="pfilter-filter-clear">{{ "templates.search.clear" | t }}</a>
                 </div>
 
                 {% case filter.type %}
@@ -132,7 +131,7 @@
                           disabled
                           {%- endif %}>
                         <label for="filter-{{ filter.param_name | escape }}-{{ forloop.index }}" class="pfilter-filter-checkbox-label">
-                          {{- filter_value.label -}}
+                          {{- filter_value.label }}
                           <small>({{ filter_value.count }})</small>
                         </label>
                       {% endfor %}
@@ -145,7 +144,7 @@
 
             {% comment %} Sort {% endcomment %}
             <div class="pfilter-sort">
-              <label>Sort by</label>
+              <label>{{ "templates.search.sort_by" | t }}</label>
               {%- assign sort_by = collection.sort_by | default: collection.default_sort_by -%}
 
               <select name="sort_by" class="pfilter-sort-select">
@@ -163,13 +162,14 @@
           </div>
 
           <div class="pfilter-drawer-footer">
-            <button type="submit" class="pfilter-submit button">Apply</button>
+            <button type="submit" class="pfilter-submit button">{{ "templates.search.apply" | t }}</button>
           </div>
         </div>
       </div>
     </form>
   </div>
 </product-filter>
+<script src="{{ 'product-filter.js' | asset_url }}" defer="defer"></script>
 
 {% schema %}
   {

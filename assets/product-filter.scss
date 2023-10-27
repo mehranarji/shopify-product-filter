@@ -12,17 +12,17 @@
     color: rgba(var(--color-link), var(--alpha-link));
     cursor: pointer;
     padding: .5rem 1rem;
-}
 
-.pfilter-button:hover {
-    background-color: rgba(var(--color-foreground), .03);
-}
+    &:hover {
+        background-color: rgba(var(--color-foreground), .03);
+    }
 
-.pfilter-button svg {
-    width: 2rem;
-    margin-right: 1rem;
-    color: rgba(var(--color-link), .5);
-    vertical-align: middle;
+    svg {
+        width: 2rem;
+        margin-right: 1rem;
+        color: rgba(var(--color-link), .5);
+        vertical-align: middle;
+    }
 }
 
 .pfilter-count {
@@ -39,25 +39,29 @@
     height: 100%;
     z-index: 100;
     transition: visibility 0s var(--duration-medium);
-}
 
-.pfilter-drawer[open] {
-    visibility: visible;
-    transition: visibility 0s 0s;
-}
+    &::before {
+        content: "";
+        display: block;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(var(--color-foreground), .5);
+        z-index: 100;
+        opacity: 0;
+        transition: opacity var(--duration-medium) ease;
+    }
 
-.pfilter-drawer::before {
-    content: "";
-    display: block;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(var(--color-foreground), .5);
-    z-index: 100;
-    opacity: 0;
-    transition: opacity var(--duration-medium) ease;
+    &[open] {
+        visibility: visible;
+        transition: visibility 0s 0s;
+
+        &::before {
+            opacity: 1;
+        }
+    }
 }
 
 .pfilter-drawer-container {
@@ -71,14 +75,10 @@
     z-index: 110;
     transform: translateX(-100%);
     transition: transform var(--duration-medium) ease;
-}
 
-.pfilter-drawer[open] .pfilter-drawer-container {
-    transform: translateX(0);
-}
-
-.pfilter-drawer[open]::before {
-    opacity: 1;
+    .pfilter-drawer[open] & {
+        transform: translateX(0);
+    }
 }
 
 .pfilter-drawer-header {
@@ -148,21 +148,17 @@
 
 .pfilter-applied-clear,
 .pfilter-filter-clear {
-    /* TODO make it a snippet */
-    border: none;
-    background: none;
-    cursor: pointer;
-
     font-size: 1.2rem;
     color: rgba(var(--color-foreground), .5);
     transition: color var(--duration-medium) ease;
     text-decoration: none;
+
+    &:hover,
+    &:hover {
+        color: rgba(var(--color-foreground), .8);
+    }
 }
 
-.pfilter-applied-clear:hover,
-.pfilter-filter-clear:hover {
-    color: rgba(var(--color-foreground), .8);
-}
 
 .pfilter-filter-group {
     margin-bottom: 2rem;
@@ -173,8 +169,8 @@
     position: absolute;
     width: 0%;
     height: 0%;
-    opacity: 0;
     margin-bottom: .3rem;
+    opacity: 0;
     cursor: pointer;
 }
 
@@ -183,35 +179,34 @@
     position: relative;
     padding-left: 2rem;
     cursor: pointer;
+
+    &::before {
+        content: "";
+        position: absolute;
+        top: .45em;
+        left: 0;
+        width: 1.5rem;
+        height: 1.5rem;
+        border: solid 1px rgba(var(--color-foreground), .2);
+        transition: background var(--duration-medium) ease, border var(--duration-medium) ease;
+    }
+
+    &::after {
+        content: "";
+        position: absolute;
+        top: .55em;
+        left: .3em;
+        width: .5rem;
+        height: 1rem;
+        transform: rotate(45deg);
+        border: solid 0 white;
+        border-bottom-width: 2px;
+        border-right-width: 2px;
+        opacity: 0;
+        transition: opacity var(--duration-medium) ease;
+    }
 }
 
-.pfilter-filter-checkbox-label::before {
-    position: absolute;
-    top: .45em;
-    left: 0;
-    content: "";
-    display: inline-block;
-    width: 1.5rem;
-    height: 1.5rem;
-    border: solid 1px rgba(var(--color-foreground), .2);
-    transition: background var(--duration-medium) ease, border var(--duration-medium) ease;
-}
-
-.pfilter-filter-checkbox-label::after {
-    position: absolute;
-    top: .55em;
-    left: .3em;
-    content: "";
-    display: inline-block;
-    width: .5rem;
-    height: 1rem;
-    transform: rotate(45deg);
-    border: solid 0 white;
-    border-bottom-width: 2px;
-    border-right-width: 2px;
-    opacity: 0;
-    transition: opacity var(--duration-medium) ease;
-}
 
 .pfilter-filter-checkbox:focus + .pfilter-filter-checkbox-label::before,
 .pfilter-filter-checkbox-label:hover::before {
@@ -236,7 +231,7 @@
     cursor: not-allowed;
     color: rgba(var(--color-foreground), .5);
 }
-.pfilter-filter-checkbox:disabled:checked + .pfilter-filter-checkbox-label::before {
+.pfilter-filter-checkbox:disabled + .pfilter-filter-checkbox-label::before {
     opacity: 0.5;
 }
 
@@ -255,22 +250,22 @@
     border: solid 1px rgba(var(--color-foreground), .08);
     padding: 1rem 1.5rem;
     transition: border var(--duration-medium) ease;
-}
 
-.pfilter-filter-text:disabled,
-.pfilter-filter-number:disabled {
-    background-color: rgba(var(--color-foreground), .03);
-    border: solid 1px rgba(var(--color-foreground), .08);
-    cursor: not-allowed;
-}
+    &:disabled,
+    &:disabled {
+        background-color: rgba(var(--color-foreground), .03);
+        border: solid 1px rgba(var(--color-foreground), .08);
+        cursor: not-allowed;
+    }
 
-.pfilter-filter-text:hover,
-.pfilter-filter-number:hover,
-.pfilter-filter-text:focus,
-.pfilter-filter-number:focus {
-    border: solid 1px rgba(var(--color-foreground), .5);
-    outline: none;
-    box-shadow: none;
+    &:hover,
+    &:hover,
+    &:focus,
+    &:focus {
+        border: solid 1px rgba(var(--color-foreground), .5);
+        outline: none;
+        box-shadow: none;
+    }
 }
 
 /* Applied filters */
@@ -290,15 +285,28 @@
     background: none;
     border: solid 1px rgba(var(--color-foreground), .08);
     padding: .5rem 1rem;
+    text-decoration: none;
     cursor: pointer;
     transition: border var(--duration-medium) ease;
-    text-decoration: none;
+
+    &:hover,
+    &:focus {
+        border: solid 1px rgba(var(--color-foreground), .5);
+        outline: none;
+        box-shadow: none;
+
+        .pfilter-applied-pill-remove,
+        .pfilter-applied-pill-remove {
+            color: rgba(var(--color-link), .8);
+        }
+    }
+
 }
 
 .pfilter-applied-pill-remove {
+    color: rgba(var(--color-link), .3);
     background: none;
     border: none;
-    color: rgba(var(--color-link), .3);
     margin-left: .5rem;
     transition: color var(--duration-medium) ease;
 }
@@ -307,18 +315,6 @@
     width: 1.5rem;
     height: 1.5rem;
     vertical-align: middle;
-}
-
-.pfilter-applied-pill:hover,
-.pfilter-applied-pill:focus {
-    border: solid 1px rgba(var(--color-foreground), .5);
-    outline: none;
-    box-shadow: none;
-}
-
-.pfilter-applied-pill:hover .pfilter-applied-pill-remove,
-.pfilter-applied-pill:focus .pfilter-applied-pill-remove {
-    color: rgba(var(--color-link), .8);
 }
 
 /* Sort */
@@ -330,14 +326,13 @@
     padding: 1rem 1.5rem;
     cursor: pointer;
     transition: border var(--duration-medium) ease;
-}
 
-.pfilter-sort-select:hover,
-.pfilter-sort-select:focus,
-.pfilter-sort-select:active {
-    border: solid 1px rgba(var(--color-foreground), .5);
-    outline: none;
-    box-shadow: none;
+    &:hover,
+    &:focus {
+        border: solid 1px rgba(var(--color-foreground), .5);
+        outline: none;
+        box-shadow: none;
+    }
 }
 
 /* Submit */
