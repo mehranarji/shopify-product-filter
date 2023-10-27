@@ -2,6 +2,7 @@
 
 <product-filter>
   <div class="page-width">
+    {% comment %} Button {% endcomment %}
     <div class="pfilter-container">
       <button type="button" class="pfilter-button">
         {% render 'icon-filter' %}
@@ -9,11 +10,11 @@
       </button>
       <span class="pfilter-count">{{ 'templates.search.results_products_with_count' | t: count: collection.products_count }}</span>
     </div>
+
     <form>
       <div class="pfilter-drawer">
-        <div class="pfilter-drawer-backdrop"></div>
-
         <div class="pfilter-drawer-container">
+          {% comment %} Drawer title {% endcomment %}
           <header class="pfilter-drawer-header">
             <h2 class="pfilter-drawer-title">{{ section.settings.title }}</h2>
             <button type="button" class="pfilter-drawer-close">
@@ -140,25 +141,27 @@
               </div>
             {% endfor %}
 
-            <hr>
 
             {% comment %} Sort {% endcomment %}
-            <div class="pfilter-sort">
-              <label>{{ "templates.search.sort_by" | t }}</label>
-              {%- assign sort_by = collection.sort_by | default: collection.default_sort_by -%}
+            {% if section.settings.enable_sorting %}
+              <hr>
+              <div class="pfilter-sort">
+                <label>{{ "templates.search.sort_by" | t }}</label>
+                {%- assign sort_by = collection.sort_by | default: collection.default_sort_by -%}
 
-              <select name="sort_by" class="pfilter-sort-select">
-                {%- for option in collection.sort_options -%}
-                  <option
-                    value="{{ option.value | escape }}"
-                    {% if option.value == sort_by %}
-                    selected="selected"
-                    {% endif %}>
-                    {{ option.name | escape }}
-                  </option>
-                {%- endfor -%}
-              </select>
-            </div>
+                <select name="sort_by" class="pfilter-sort-select">
+                  {%- for option in collection.sort_options -%}
+                    <option
+                      value="{{ option.value | escape }}"
+                      {% if option.value == sort_by %}
+                      selected="selected"
+                      {% endif %}>
+                      {{ option.name | escape }}
+                    </option>
+                  {%- endfor -%}
+                </select>
+              </div>
+            {% endif %}
           </div>
 
           <div class="pfilter-drawer-footer">
@@ -177,10 +180,20 @@
     "class": "section",
     "settings": [
       {
-        "id": "title",
         "type": "text",
+        "id": "title",
         "default": "Filter and sort",
-        "label": "Title"
+        "label": "t:templates.search.settings.title"
+      }, {
+        "type": "checkbox",
+        "id": "enable_sorting",
+        "label": "t:templates.search.settings.enable_sorting",
+        "default": false
+      }, {
+        "type": "checkbox",
+        "id": "display_count",
+        "label": "t:templates.search.settings.display_count",
+        "default": true
       }
     ]
   }

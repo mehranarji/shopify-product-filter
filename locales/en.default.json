@@ -243,7 +243,12 @@
       "clear": "Clear",
       "filter_and_sort": "Filter and sort",
       "sort_by": "Sort By",
-      "apply": "Apply"
+      "apply": "Apply",
+      "settings": {
+        "title": "Button Title",
+        "enable_sorting": "Enable sorting",
+        "display_count": "Display product count"
+      }
     },
     "cart": {
       "cart": "Cart"
