@@ -16,17 +16,18 @@
     &:hover {
         background-color: rgba(var(--color-foreground), .03);
     }
+}
 
-    svg {
-        width: 2rem;
-        margin-right: 1rem;
-        color: rgba(var(--color-link), .5);
-        vertical-align: middle;
-    }
+.pfilter-button svg {
+    width: 2rem;
+    margin-right: 1rem;
+    color: rgba(var(--color-link), .5);
+    vertical-align: middle;
 }
 
 .pfilter-count {
     font-size: 1.4rem;
+    animation: slide-in forwards 1 .5s ease;
 }
 
 /* Drawer */
@@ -288,6 +289,7 @@
     text-decoration: none;
     cursor: pointer;
     transition: border var(--duration-medium) ease;
+    animation: slide-in forwards 1 .5s ease;
 
     &:hover,
     &:focus {
@@ -339,4 +341,16 @@
 .pfilter-submit {
     display: block;
     width: 100%;
+}
+
+@keyframes slide-in {
+    from {
+        opacity: 0;
+        transform: translateY(-1.5rem);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }

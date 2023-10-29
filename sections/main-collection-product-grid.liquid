@@ -121,6 +121,10 @@
         </aside>
       {%- endif -%}
 
+      {% if section.settings.enable_product_filter %}
+        {% render 'product-filter' %}
+      {% endif %}
+
       <div
         class="product-grid-container{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}"
         id="ProductGridContainer"
@@ -310,6 +314,19 @@
     {
       "type": "header",
       "content": "t:sections.main-collection-product-grid.settings.header__1.content"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_product_filter",
+      "default": true,
+      "label": "t:sections.main-collection-product-grid.settings.enable_product_filter.label",
+      "info": "t:sections.main-collection-product-grid.settings.enable_product_filter.info"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_product_sort",
+      "default": true,
+      "label": "t:sections.main-collection-product-grid.settings.enable_product_sort.label"
     },
     {
       "type": "checkbox",

@@ -1767,6 +1767,13 @@
           "label": "Enable filtering",
           "info": "Customize filters with the Search & Discovery app. [Learn more](https:\/\/help.shopify.com\/manual\/online-store\/search-and-discovery\/filters)"
         },
+        "enable_product_filter": {
+          "label": "Enable product filter (Drawer)",
+          "info": "Customize filters with the Search & Discovery app. [Learn more](https:\/\/help.shopify.com\/manual\/online-store\/search-and-discovery\/filters)"
+        },
+        "enable_product_sort": {
+          "label": "Enable product sort"
+        },
         "filter_type": {
           "label": "Desktop filter layout",
           "options__1": {

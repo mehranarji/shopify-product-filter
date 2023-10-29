@@ -24,6 +24,8 @@
         "show_vendor": false,
         "show_rating": false,
         "enable_quick_add": false,
+        "enable_product_filter": true,
+        "enable_product_sort": true,
         "enable_filtering": false,
         "filter_type": "drawer",
         "enable_sorting": false,

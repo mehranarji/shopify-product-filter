@@ -1,22 +1,44 @@
+{% comment %}
+  Renders filter and sorting drawer
+
+  Accepts:
+  - collection: {Object} Product collection
+  - enable_filtering: {Boolean} Show filtering when true
+  - enable_sorting: {Boolean} Show sorting when true
+
+  Usage:
+  {% render 'product-filter', collection: collection, enable_filtering: true, enable_sorting: true %}
+{% endcomment %}
+
 {{ 'product-filter.scss' | asset_url | stylesheet_tag }}
 
-<product-filter>
+<product-filter id="product-filter">
   <div class="page-width">
     {% comment %} Button {% endcomment %}
     <div class="pfilter-container">
       <button type="button" class="pfilter-button">
         {% render 'icon-filter' %}
-        {{ section.settings.title }}
+        {% if section.settings.enable_product_sort %}
+          {{ "templates.search.filter_and_sort" | t }}
+        {% else %}
+          {{ "templates.search.filter" | t }}
+        {% endif %}
       </button>
       <span class="pfilter-count">{{ 'templates.search.results_products_with_count' | t: count: collection.products_count }}</span>
     </div>
 
-    <form>
+    <form x-data="{loading: false}" @filter-changed.window="$nextTick(() => console.log('updated'))">
       <div class="pfilter-drawer">
         <div class="pfilter-drawer-container">
           {% comment %} Drawer title {% endcomment %}
           <header class="pfilter-drawer-header">
-            <h2 class="pfilter-drawer-title">{{ section.settings.title }}</h2>
+            <h2 class="pfilter-drawer-title">
+              {% if section.settings.enable_product_sort %}
+                {{ "templates.search.filter_and_sort" | t }}
+              {% else %}
+                {{ "templates.search.filter" | t }}
+              {% endif %}
+            </h2>
             <button type="button" class="pfilter-drawer-close">
               {% render 'icon-close-small' %}
             </button>
@@ -130,7 +152,8 @@
                           {%- endif %}
                           {% if filter_value.count == 0 and filter_value.active == false -%}
                           disabled
-                          {%- endif %}>
+                          {%- endif %}
+                          @change="$dispatch('filter-changed')">
                         <label for="filter-{{ filter.param_name | escape }}-{{ forloop.index }}" class="pfilter-filter-checkbox-label">
                           {{- filter_value.label }}
                           <small>({{ filter_value.count }})</small>
@@ -143,7 +166,7 @@
 
 
             {% comment %} Sort {% endcomment %}
-            {% if section.settings.enable_sorting %}
+            {% if section.settings.enable_product_sort %}
               <hr>
               <div class="pfilter-sort">
                 <label>{{ "templates.search.sort_by" | t }}</label>
@@ -165,7 +188,9 @@
           </div>
 
           <div class="pfilter-drawer-footer">
-            <button type="submit" class="pfilter-submit button">{{ "templates.search.apply" | t }}</button>
+            <button type="submit" class="pfilter-submit button">
+              {{ "templates.search.apply" | t }}
+            </button>
           </div>
         </div>
       </div>
@@ -173,28 +198,3 @@
   </div>
 </product-filter>
 <script src="{{ 'product-filter.js' | asset_url }}" defer="defer"></script>
-
-{% schema %}
-  {
-    "name": "Product filter",
-    "class": "section",
-    "settings": [
-      {
-        "type": "text",
-        "id": "title",
-        "default": "Filter and sort",
-        "label": "t:templates.search.settings.title"
-      }, {
-        "type": "checkbox",
-        "id": "enable_sorting",
-        "label": "t:templates.search.settings.enable_sorting",
-        "default": false
-      }, {
-        "type": "checkbox",
-        "id": "display_count",
-        "label": "t:templates.search.settings.display_count",
-        "default": true
-      }
-    ]
-  }
-{% endschema %}
