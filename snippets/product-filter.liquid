@@ -1,13 +1,12 @@
 {% comment %}
-  Renders filter and sorting drawer
+  Renders filter and sort drawer
 
   Accepts:
-  - collection: {Object} Product collection
-  - enable_filtering: {Boolean} Show filtering when true
-  - enable_sorting: {Boolean} Show sorting when true
+  - collection: {Object} Product list
+  - enable_product_sort: {Boolean} Display sort
 
   Usage:
-  {% render 'product-filter', collection: collection, enable_filtering: true, enable_sorting: true %}
+  {% render 'product-filter', collection: collection, enable_product_sort: true %}
 {% endcomment %}
 
 {{ 'product-filter.scss' | asset_url | stylesheet_tag }}

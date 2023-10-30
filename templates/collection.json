@@ -8,11 +8,6 @@
         "color_scheme": "background-1"
       }
     },
-    "filter": {
-      "type": "product-filter",
-      "settings": {
-      }
-    },
     "product-grid": {
       "type": "main-collection-product-grid",
       "settings": {
@@ -37,7 +32,6 @@
   },
   "order": [
     "banner",
-    "filter",
     "product-grid"
   ]
 }

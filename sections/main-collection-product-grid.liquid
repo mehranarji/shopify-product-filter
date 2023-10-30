@@ -122,7 +122,10 @@
       {%- endif -%}
 
       {% if section.settings.enable_product_filter %}
-        {% render 'product-filter' %}
+        {% render 'product-filter',
+          collection: collection,
+          enable_product_sort: enable_product_sort,
+        %}
       {% endif %}
 
       <div
